@@ -1,0 +1,37 @@
+from pytube import YouTube
+import tkinter
+import os
+
+
+
+TK = tkinter.Tk()
+TK.title("Youtube MP3 Converter")
+
+TextBox = tkinter.Label(TK, text="Input URL")
+TextBox.pack()
+
+EntryBox = tkinter.Entry(TK)
+EntryBox.pack()
+
+def Print_Audio():
+    try:
+        InputLink = YouTube(EntryBox.get())
+        stream = InputLink.streams.filter(only_audio=True).first()
+        
+    except:
+        TextBox1.config(text="Something is wrong with your Input")
+    else:
+        OutPut_File = stream.download()
+        base, ext = os.path.splitext(OutPut_File)
+        new_file = base + ".mp3"
+        os.rename(OutPut_File, os.path.join(os.path.dirname(OutPut_File), new_file))
+        
+        TextBox1.config(text="You're Audio has been succesfully downloaded")
+
+ButtonBox = tkinter.Button(TK, text="Convert", command=Print_Audio)
+ButtonBox.pack()
+
+TextBox1 = tkinter.Label(TK, text="")
+TextBox1.pack()
+
+TK.mainloop()
