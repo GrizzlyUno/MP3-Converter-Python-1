@@ -1,0 +1,60 @@
+from pytube import YouTube
+import tkinter
+import os
+
+TK = tkinter.Tk()
+TK.title("Youtube MP3 Converter")
+TK.iconbitmap("Icon.ico")
+
+TextBox = tkinter.Label(TK, text="Input URL")
+TextBox.pack()
+
+EntryBox = tkinter.Entry(TK)
+EntryBox.pack()
+
+def Print_Audio():
+    try:
+        InputLink = YouTube(EntryBox.get())
+        stream = InputLink.streams.filter(only_audio=True).first()
+        OutPut_File = stream.download(output_path=PathInput.get())
+        base, ext = os.path.splitext(OutPut_File)
+        new_file = base + ".mp3" 
+        os.rename(OutPut_File, os.path.join(os.path.dirname(OutPut_File), new_file))
+    except FileExistsError:
+        TextBox1.config(text="Audio already exists")
+    except:
+        TextBox1.config(text="Something is wrong with your Input")
+    else:
+        TextBox1.config(text="Your Audio has been Downloaded")
+        
+
+ButtonBox = tkinter.Button(TK, text="Convert", command=Print_Audio)
+ButtonBox.pack()
+
+TextBox1 = tkinter.Label(TK, text="")
+TextBox1.pack()
+
+Space = tkinter.Label(TK, text="")
+Space.pack()
+
+def ReadPath():
+    with open('SavePath.txt', 'r') as f:
+        path = f.read()
+    return path
+
+PathInput = tkinter.Entry(TK)
+PathInput.pack()
+
+PathInput.delete(0, tkinter.END)
+PathInput.insert(0, ReadPath())
+
+def SavePath():
+    with open("SavePath.txt", "w") as file:
+        file.write(PathInput.get())
+
+
+ButtonBox1 = tkinter.Button(TK, text="Use/Save Path", command=SavePath)
+ButtonBox1.pack()
+
+
+TK.mainloop()
