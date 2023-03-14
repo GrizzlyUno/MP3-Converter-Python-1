@@ -1,16 +1,23 @@
 from pytube import YouTube
-import tkinter
+import customtkinter as tkinter
 import os
 
-TK = tkinter.Tk()
+tkinter.set_appearance_mode("dark")
+tkinter.set_default_color_theme("dark-blue")
+
+TK = tkinter.CTk()
+TK.geometry("500x400")
 TK.title("Youtube MP3 Converter")
 TK.iconbitmap("Icon.ico")
 
-TextBox = tkinter.Label(TK, text="Input URL")
-TextBox.pack()
+frame = tkinter.CTkFrame(master=TK)
+frame.pack(pady=20, padx=90, fill="both", expand=True)
 
-EntryBox = tkinter.Entry(TK)
-EntryBox.pack()
+TextBox = tkinter.CTkLabel(master=frame, text="Input URL")
+TextBox.pack(pady=12, padx=20)
+
+EntryBox = tkinter.CTkEntry(master=frame)
+EntryBox.pack(pady=12, padx=20)
 
 def Print_Audio():
     try:
@@ -21,29 +28,32 @@ def Print_Audio():
         new_file = base + ".mp3" 
         os.rename(OutPut_File, os.path.join(os.path.dirname(OutPut_File), new_file))
     except FileExistsError:
-        TextBox1.config(text="Audio already exists")
+        TextBox1.configure(text="Audio already exists")
     except:
-        TextBox1.config(text="Something is wrong with your Input")
+        TextBox1.configure(text="Something is wrong with your Input")
     else:
-        TextBox1.config(text="Your Audio has been Downloaded")
-        
+        TextBox1.configure(text="Your Audio has been Downloaded") 
 
-ButtonBox = tkinter.Button(TK, text="Convert", command=Print_Audio)
-ButtonBox.pack()
 
-TextBox1 = tkinter.Label(TK, text="")
-TextBox1.pack()
+ButtonBox = tkinter.CTkButton(master=frame, text="Convert", command=Print_Audio, font=("Gotham", 16))
+ButtonBox.pack(pady=12, padx=20)
 
-Space = tkinter.Label(TK, text="")
-Space.pack()
+TextBox1 = tkinter.CTkLabel(master=frame, text="")
+TextBox1.pack(pady=12, padx=20)
+
+#Space = tkinter.CTkLabel(master=frame, text="")
+#Space.pack(pady=12, padx=20)
 
 def ReadPath():
     with open('SavePath.txt', 'r') as f:
         path = f.read()
     return path
 
-PathInput = tkinter.Entry(TK)
-PathInput.pack()
+TextBox2 = tkinter.CTkLabel(master=frame, text="Path:")
+TextBox2.pack(pady=12, padx=20)
+
+PathInput = tkinter.CTkEntry(master=frame)
+PathInput.pack(pady=12, padx=20)
 
 PathInput.delete(0, tkinter.END)
 PathInput.insert(0, ReadPath())
@@ -53,8 +63,8 @@ def SavePath():
         file.write(PathInput.get())
 
 
-ButtonBox1 = tkinter.Button(TK, text="Use/Save Path", command=SavePath)
-ButtonBox1.pack()
+ButtonBox1 = tkinter.CTkButton(master=frame, text="Use/Save Path", command=SavePath)
+ButtonBox1.pack(pady=12, padx=20)
 
 
 TK.mainloop()
